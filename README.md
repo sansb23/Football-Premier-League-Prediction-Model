@@ -1,5 +1,4 @@
 # Football-Premier-League-Prediction-Model
-# ⚽ Football Match Prediction Model
 
 A machine learning project that predicts Premier League match outcomes using Random Forest classification, xG (expected goals) features, and Poisson-based goal modelling.
 
