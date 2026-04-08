@@ -1,197 +1,244 @@
-# Football-Premier-League-Prediction-Model
+# ⚽ Football Premier League Prediction Model
 
-A machine learning project that predicts Premier League match outcomes using Random Forest classification, xG (expected goals) features, and Poisson-based goal modelling.
+## 📌 Project Overview
+
+This project is a **machine learning-based football prediction system** that predicts the outcome of Premier League matches.
+
+In simple words:
+👉 You enter two teams
+👉 The model tells you:
+
+* Who is likely to win 🏆
+* Probability of Home Win / Away Win / Draw 📊
+* Chances of goals (Over/Under, BTTS)
+
+This is similar to how real sports analytics systems work using historical data and statistics.
 
 ---
 
-## 📁 Project Structure
+## 🎯 Objective
+
+The main goal of this project is:
+
+* To predict match outcomes (Home Win / Away Win / Draw)
+* To use **data instead of guessing**
+* To understand how football analytics works in real life
+
+Football prediction models usually rely on **team strength, past performance, and statistical patterns** ([Wikipedia][1])
+
+---
+
+## 🧠 How It Works (Simple Explanation)
+
+### Step 1: Data Collection
+
+* Match data (teams, results, stats)
+* Player and team performance data
+* Multiple seasons of Premier League data
+
+---
+
+### Step 2: Data Cleaning
+
+* Removed missing values
+* Standardized column names
+* Combined multiple CSV files into one dataset
+
+---
+
+### Step 3: Feature Engineering
+
+We created useful features like:
+
+* Average expected goals (xG)
+* Last 5 matches performance
+* Difference between teams (xG diff)
+
+These features help the model understand:
+👉 Which team is stronger
+👉 Current form of teams
+
+---
+
+### Step 4: Machine Learning Model
+
+We used:
+
+* Logistic Regression (baseline)
+* Random Forest (final model ✅)
+
+Why Random Forest?
+
+* Works well with structured data
+* Handles patterns better
+* Gives better accuracy
+
+---
+
+### Step 5: Prediction System
+
+The model predicts:
+
+* Match result (H / A / D)
+* Winning team name
+* Probabilities of each outcome
+
+We also added:
+
+* 📊 Visualization (bar chart)
+* ⚽ Goal predictions using Poisson distribution
+  (commonly used in football analytics) ([arXiv][2])
+
+---
+
+## 📊 Features of the Project
+
+✅ Predict match winner
+✅ Probability of win/draw/loss
+✅ Expected goals (xG-based)
+✅ Both Teams To Score (BTTS)
+✅ Over / Under 2.5 goals
+✅ Visualization of predictions
+✅ Handles new season data (2025–26)
+
+---
+
+## 🗂️ Project Structure
 
 ```
 Football_prediction_model/
 │
 ├── Data/
-│   ├── raw_data/
-│   │   └── clean_raw_data.py
-│   │   └── metadata.py
-│   │   └── Premier_League_metadata.csv
-│   │   └── read_raw_data.py
-│   │   └── run_metadata.py
-│   └── processed_data/
-│       ├── matches_ml_xg_features.csv
-│       ├── matches_ml_ready.csv
-│       ├── team_id_map_2025_26.csv
-│       └── match_predictions_with_probabilities.csv
-│
-├── train_model/
-│   ├── random_forest_model.pkl
-│   └── random_forest_model_2025_26.pkl
+│   ├── raw_data/              # Raw datasets
+│   ├── processed_data/        # Cleaned + ML-ready data
 │
 ├── libraries/
-│   ├── core.py
-│   └── ml.py
+│   ├── core.py               # Core imports
+│   ├── ml.py                 # ML utilities
 │
-├── model1.py
-├── random_forest.py
-├── train_random_forest_2025-26.py
-├── team_mapping.py
-├── team_mapping_2025-26.py
-└── predict_next_match.py
+├── train_model/
+│   ├── model1.py             # Logistic Regression
+│   ├── random_forest.py      # Random Forest training
+│   ├── predict_next_match.py # Final prediction script
+│   ├── team_mapping_2025_26.py
+│
+└── README.md
 ```
 
 ---
 
-## 🧠 Models
+## ⚙️ Installation & Setup
 
-### `model1.py` — Logistic Regression (Baseline)
-A baseline classification model using Logistic Regression trained on `matches_ml_ready.csv`.
-
-### `random_forest.py` — Random Forest v1
-Trains a Random Forest classifier (200 estimators, max depth 6) on xG-based features. Outputs feature importances, win probabilities, and saves predictions to CSV.
-
-### `train_random_forest_2025-26.py` — Random Forest v2 (2025–26 Season)
-An improved Random Forest (300 estimators, max depth 7, min samples leaf 5) retrained specifically on 2025–26 season data with better regularisation.
-
----
-
-## 🗂️ Key Scripts
-
-| Script | Purpose |
-|---|---|
-| `model1.py` | Logistic Regression baseline model |
-| `random_forest.py` | Train & evaluate RF v1, save model + probabilities |
-| `train_random_forest_2025-26.py` | Retrain RF for 2025–26 season |
-| `team_mapping.py` | Build team ID → name mapping from match data |
-| `team_mapping_2025-26.py` | Auto-detect and map team codes for 2025–26 |
-| `predict_next_match.py` | Interactive CLI to predict any upcoming match |
-
----
-
-## 🔮 Prediction Pipeline (`predict_next_match.py`)
-
-The prediction script combines two approaches for calibrated probability estimates:
-
-1. **Random Forest (ML)** — Predicts Home Win / Draw / Away Win from historical xG features.
-2. **Poisson Goal Model** — Uses rolling average xG to estimate score distributions and draw probability.
-3. **Blended Output** — ML win probabilities are scaled using the Poisson-derived draw probability for better calibration.
-
-### Additional Markets Output
-- **BTTS (Both Teams To Score):** YES / NO probabilities
-- **Over/Under 2.5 Goals:** Based on total xG via Poisson distribution
-- **Bar chart visualisation** of all outcome probabilities
-
----
-
-## ⚙️ Features Used
-
-| Feature | Description |
-|---|---|
-| `home_team` | Encoded home team ID |
-| `away_team` | Encoded away team ID |
-| `home_avg_xg_last5` | Home team's rolling average xG over last 5 matches |
-| `away_avg_xg_last5` | Away team's rolling average xG over last 5 matches |
-| `xg_diff` | Difference between home and away xG |
-
-**Target variable:** `result` — `H` (Home Win), `D` (Draw), `A` (Away Win)
-
----
-
-## 🚀 Getting Started
-
-### 1. Install Dependencies
-
-```bash
-pip install pandas scikit-learn joblib matplotlib scipy
-```
-
-### 2. Prepare Data
-
-Ensure `Data/processed_data/matches_ml_xg_features.csv` exists with the required feature columns.
-
-### 3. Build Team Mapping
-
-```bash
-python team_mapping_2025-26.py
-```
-
-### 4. Train the Model
-
-```bash
-python train_random_forest_2025-26.py
-```
-
-### 5. Predict a Match
-
-```bash
-python predict_next_match.py
-```
-
-You will be prompted to enter the home and away team names:
+### Step 1: Clone Repository
 
 ```
-⚽ FOOTBALL MATCH PREDICTOR ⚽
+git clone https://github.com/sansb23/Football-Premier-League-Prediction-Model.git
+cd Football-Premier-League-Prediction-Model
+```
 
-Enter HOME team name: Arsenal
-Enter AWAY team name: Chelsea
+### Step 2: Install Libraries
+
+```
+python -m pip install pandas numpy scikit-learn matplotlib scipy joblib seaborn plotly
 ```
 
 ---
 
-## 📊 Example Output
+## ▶️ How to Run
+
+### Train Model
 
 ```
-📊 MATCH PREDICTION (CALIBRATED)
---------------------------------
-Match: Arsenal vs Chelsea
-Predicted Winner: Arsenal
+python -m train_model.random_forest
+```
 
-Win Probabilities:
-Arsenal Win:  54.3%
-Draw:         22.1%
-Chelsea Win:  23.6%
+### Predict Match
 
-⚽ GOAL MARKETS (xG-based)
--------------------------
-Arsenal xG:  1.72
-Chelsea xG:  1.10
-Total xG:    2.82
-
-Both Teams To Score:
-YES: 67.4%
-NO : 32.6%
-
-Over / Under 2.5 Goals:
-Over 2.5:  58.9%
-Under 2.5: 41.1%
+```
+python -m train_model.predict_next_match
 ```
 
 ---
 
-## 🧪 Model Performance
+## 🧪 Example
 
-The Random Forest model is evaluated using:
-- **Accuracy Score**
-- **Classification Report** (Precision, Recall, F1 per class)
-- **Confusion Matrix**
+```
+Enter HOME team name: MUN
+Enter AWAY team name: BOU
+```
 
-Trained with an 80/20 stratified train-test split (`random_state=42`).
+Output:
+
+```
+Match: Man Utd vs Bournemouth
+
+Predicted Winner: Man Utd
+
+Probabilities:
+Home Win: 55%
+Draw: 25%
+Away Win: 20%
+```
 
 ---
 
-## 📌 Notes
+## 📈 Model Performance
 
-- Team codes are integer IDs sourced from the football metadata `teams.csv`.
-- The legacy team fix dictionary in `team_mapping.py` handles teams whose IDs differ between seasons (e.g., Man City → 43, Brentford → 94).
-- Models are saved as `.pkl` files using `joblib` for fast reloading.
-- The prediction script falls back to the dataset mean xG if a team has no historical records.
+* Accuracy: ~60–63%
+* This is considered good in football prediction because:
+
+  * Football is highly unpredictable
+  * Even professional models struggle to exceed ~65%
 
 ---
 
-## 📦 Dependencies
+## 🚧 Challenges Faced
 
-| Library | Use |
-|---|---|
-| `pandas` | Data loading and manipulation |
-| `scikit-learn` | Model training and evaluation |
-| `joblib` | Model serialisation |
-| `matplotlib` | Probability visualisation |
-| `scipy` | Poisson distribution for goal modelling |
+* Handling missing data
+* Different team IDs across seasons
+* Updating model for new season (2025–26)
+* Draw prediction imbalance
+
+---
+
+## 🔄 Future Improvements
+
+* Add more features (shots, possession, player stats)
+* Use deep learning models
+* Build web app (Streamlit)
+* Real-time match predictions
+* Betting strategy simulation
+
+---
+
+## 🧑‍💻 Tech Stack
+
+* Python
+* Pandas, NumPy
+* Scikit-learn
+* Matplotlib / Seaborn
+* Joblib
+
+---
+
+## 💡 Key Learnings
+
+* Data cleaning is the most important step
+* Feature engineering improves accuracy
+* ML models are only as good as the data
+* Real-world projects require debugging and iteration
+
+---
+
+## 👤 Author
+
+**Sans (Sanskriti Bhardwaj)**
+
+* Data Science + Fashion + Sports Analytics
+
+---
+
+## ⭐ Final Note
+
+This project is not just about predicting football matches —
+it shows how **data + machine learning can be used to make decisions in real life**.
