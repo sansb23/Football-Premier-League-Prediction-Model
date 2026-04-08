@@ -11,11 +11,11 @@ Football_prediction_model/
 │
 ├── Data/
 │   ├── raw_data/
-│   │   └── football_metadata/
-│   │       └── data/
-│   │           └── Premier_League/
-│   │               └── 2025-2026/
-│   │                   └── teams.csv
+│   │   └── clean_raw_data.py
+│   │   └── metadata.py
+│   │   └── Premier_League_metadata.csv
+│   │   └── read_raw_data.py
+│   │   └── run_metadata.py
 │   └── processed_data/
 │       ├── matches_ml_xg_features.csv
 │       ├── matches_ml_ready.csv
